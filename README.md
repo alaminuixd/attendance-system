@@ -1,34 +1,100 @@
-# Lottery API
+# Attendance System
 
-## Requirments
+## Functional Requirements
 
-- Sell/ Create lottery ticket
-- Update lottery ticket
-- Delete lottery ticket
-- Get all lottery ticket
-- Get lottery ticket by Id
-- Bulk buy (user can buy multiple tickets at a time)
-- Raffle draw
+### Admin:
 
-## The Ticket Structure
+The super admin account will be generated during application installation
 
-- Ticket Number
-- Buyer Name
-- Price
-- Timestamp
+Admin will have the following controls
 
-## Routes
+-   Creating students
+-   Can update, delete and check students information
+-   Changing status of a student
+-   Enable/ disable attendance entry system
+-   Can check status of a given day
 
-/tickets/sell -> (POST) Create tickets <br/>
-/tickets/bulk -> (POST) Create bulk tickets <br/>
-/tickets/draw -> (GET) Create bulk tickets <br/>
+### Students:
 
-/tickets -> (GET) get all tickets <br/>
+-   Students can register for an account
+-   There will be the following types of state for accounts
+    -   Pending
+    -   Active
+    -   Reject
+-   Users can login with their individual credentials.
+-   Pending & Rejected users wouldn’t have anything in their profile
+-   Active users can update their profile info
+    -   First Name
+    -   Last Name
+    -   Email
+    -   Phone Number
+    -   Profile Picture
+-   Active user can change/ update their password
+-   Active users can see their logs/ timesheet
+    -   Calendar view
+    -   List view
+    -   Table view
+    -   List View
+-   Active users can participate in the attendance system
+-   User can logout
 
-/tickets/t/:ticketId -> (GET) Find a single ticket by ID <br/>
-/tickets/t/:ticketId -> (PATCH) Update a single ticket by ID <br/>
-/tickets/t/:ticketId -> (DELETE) Delete a single ticket by ID <br/>
+## Requirement Analysis
 
-/tickets/u/:username -> (GET) Find a single ticket by username <br/>
-/tickets/u/:username -> (PATCH) Update a single ticket by username <br/>
-/tickets/u/:username -> (DELETE) Delete a single ticket by username <br/>
+### Models
+
+**User:**
+
+-   Name
+-   Email
+-   Password
+-   Roles
+-   Account Status
+
+**Profile**
+
+-   First Name
+-   Last Name
+-   Phone Number
+-   Profile Picture/ _avatar_
+-   User
+
+**Student Attendance**
+
+-   UserID
+-   CreatedAt: Date Time
+-   Admin attendanceId
+
+**Admin Attendance**
+
+-   CreatedAt: Date Time
+-   Status
+-   Time Limit
+
+## Endpoints
+
+### **Students**
+
+-   POST /auth/login [public route]
+-   POST /auth/register [public route]
+-   PATCH /profile/:profileId [private]
+-   PATCH /profile/avatar [private]
+-   PUT /auth/change-password [private]
+-   GET /timesheet [private]
+-   GET /attendance [private]
+-   GET /attendanceStatus [private]
+
+### Admin
+
+-   GET /users [private]
+-   POST /users [private]
+-   PATCH /user/:userId [private]
+-   DELETE /users/:userId [private]
+-   GET /users/:userId [private]
+-   GET /profiles [private]
+-   POST /profiles/:profileId[private]
+-   DELETE /profiles/:profileId [private]
+-   GET /profiles/:profileId [private]
+-   GET /timesheet/userId [private]
+-   GET /timesheet/stats
+-   GET /attendance/enable [private]
+-   GET /attendance/disable/:attendanceId [private]
