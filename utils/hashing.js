@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
 export async function doHash(value, salt = 10) {
     try {
@@ -14,4 +15,8 @@ export async function doHashCompare(value, hashedValue) {
     } catch (error) {
         throw new Error(`Hashing comparison failed. Error: ${error}`);
     }
+}
+
+export function createHmac() {
+    return crypto;
 }
