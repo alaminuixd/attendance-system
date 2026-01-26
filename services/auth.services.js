@@ -13,11 +13,7 @@ import createError from '../utils/create.error.js';
 
 export const registerService = async ({ name, email, password }) => {
     const foundUser = await findUserByProperty('email', email); //User.findOne({ email });
-    if (foundUser) {
-        const error = new Error('User already exists!'); // return an error object
-        error.status = 409;
-        throw error;
-    }
+    if (foundUser) throw createError('User already exists!', 409);
     password = await doHash(password);
     return createNewUser({ name, email, password });
 };
@@ -36,7 +32,7 @@ export const loginService = async ({ email, password }) => {
     // const user = await User.findOne({ email });
     const user = await findUserByProperty('email', email);
     console.log(`User is: ${user}`);
-    if (!user) throw createError('Invalid credentials', 404);
+    if (!user) throw createError('Invalid credentials!', 404);
     const isValid = await doHashCompare(password, user.password);
     console.log(isValid);
     if (!isValid) throw createError('Invalid credentials!', 400);
@@ -51,7 +47,7 @@ export const loginService = async ({ email, password }) => {
     };
     const expires = 30;
     const token = jwt.sign(payload, ACCESS_TOKEN_SEC, {
-        expiresIn: `${expires}s`,
+        expiresIn: `${expires}m`,
     });
     const userObj = sanitizeUser(user, [
         'password',

@@ -36,7 +36,7 @@ export const loginController = async (req, res, next) => {
             password,
         });
         res.cookie('accessToken', `Bearer ${token}`, {
-            expires: new Date(Date.now() + expires * 1000),
+            expires: new Date(Date.now() + expires * 60 * 1000),
             httpOnly: NODE_ENV === 'production',
             secure: NODE_ENV === 'production',
             sameSite: 'strict',
