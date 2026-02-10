@@ -11,11 +11,17 @@ import { findUserByProperty, createNewUser } from './user.services.js';
 import { sanitizeUser } from '../utils/user.utils.js';
 import createError from '../utils/create.error.js';
 
-export const registerService = async ({ name, email, password }) => {
+export const registerService = async ({
+    name,
+    email,
+    password,
+    roles,
+    accountStatus,
+}) => {
     const foundUser = await findUserByProperty('email', email); //User.findOne({ email });
     if (foundUser) throw createError('User already exists!', 409);
     password = await doHash(password);
-    return createNewUser({ name, email, password });
+    return createNewUser({ name, email, password, roles, accountStatus });
 };
 
 /**
@@ -45,7 +51,7 @@ export const loginService = async ({ email, password }) => {
         roles: user.roles,
         accountStatus: user.accountStatus,
     };
-    const expires = 30;
+    const expires = 5;
     const token = jwt.sign(payload, ACCESS_TOKEN_SEC, {
         expiresIn: `${expires}m`,
     });
@@ -57,3 +63,7 @@ export const loginService = async ({ email, password }) => {
     ]);
     return { token, userObj, expires };
 };
+
+const authService = { registerService, loginService };
+
+export default authService;

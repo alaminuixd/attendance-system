@@ -25,7 +25,7 @@ export default async function verifyToken(req, res, next) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
         req.user = user;
-        console.log(user);
+        // console.log(user);
 
         next();
     } catch (error) {

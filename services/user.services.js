@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import createError from '../utils/create.error.js';
 
 export const findUsers = () => {
     return User.find();
@@ -53,9 +54,48 @@ export const findUserByProperty = (key, value) => {
  * - Password must be hashed before calling this function.
  * - Internally creates a new `User` instance and calls `.save()` which returns a Promise.
  */
-export const createNewUser = ({ name, email, password }) => {
-    const user = new User({ name, email, password });
+export const createNewUser = ({
+    name,
+    email,
+    password,
+    roles,
+    accountStatus,
+}) => {
+    const user = new User({
+        name,
+        email,
+        password,
+        roles,
+        accountStatus,
+    });
     return user.save(); // returns Promise<User>
 };
 
-export default { findUsers, findUserByProperty, createNewUser };
+/**
+ * Updates a user document by its ID.
+ *
+ * @param {string} id - The unique identifier of the user to update.
+ * @param {object} data - Fields to update, typically derived from the request body.
+ * @returns {Promise<User|null>} A promise that resolves to the updated user document,
+ * or null if no user is found with the given ID.
+ */
+export const updateUser = async (id, data) => {
+    const user = await findUserByProperty('email', data.email);
+    // if (user && user._id !== id) throw createError('Email already in use', 400);
+    if (user) throw createError('Email already in use', 400);
+    return User.findByIdAndUpdate(id, { ...data }, { new: true });
+};
+
+export const deleteUserService = (userId) => {
+    const user = findUserByProperty('_id', userId);
+    if (!user) throw createError('User not found!', 404);
+    return user.deleteOne();
+};
+
+export default {
+    findUsers,
+    findUserByProperty,
+    createNewUser,
+    updateUser,
+    deleteUserService,
+};

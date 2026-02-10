@@ -1,15 +1,14 @@
 import { Router } from 'express';
-import verifyToken from '../middlewares/verify.token.js';
-import { getUsers } from '../controllers/users.controller.js';
 import userController from '../controllers/users.controller.js';
 
 const userRouter = Router();
-
+// router.use('/api/v1/users', verifyToken, userRouter);
 userRouter.get('/', userController.getUsers);
-// userRouter.post('/', userController.getUserById);
+userRouter.post('/', userController.postUser);
 userRouter.get('/:userId', userController.getUserById);
-userRouter.patch('/:userId', async (req, res, next) => {});
-userRouter.delete('/:userId', async (req, res, next) => {});
+userRouter.patch('/:userId', userController.patchUserById);
+userRouter.put('/:userId', userController.putUserById);
+userRouter.delete('/:userId', userController.deleteUserById);
 
 export default userRouter;
 

@@ -1,8 +1,5 @@
-import User from '../models/User.js';
-import { doHash, doHashCompare } from '../utils/hashing.js';
-import jwt from 'jsonwebtoken';
-import { ACCESS_TOKEN_SEC, NODE_ENV } from '../config/env.js';
-import { registerService, loginService } from '../services/auth.services.js';
+import { NODE_ENV } from '../config/env.js';
+import authService from '../services/auth.services.js';
 
 export const healthController = async (req, res) => {
     try {
@@ -18,7 +15,11 @@ export const registerController = async (req, res, next) => {
     }
     email = email.toLowerCase();
     try {
-        const user = await registerService({ name, email, password });
+        const user = await authService.registerService({
+            name,
+            email,
+            password,
+        });
         res.status(201).json({ message: 'New user created!', user });
     } catch (error) {
         next(error);
@@ -31,7 +32,7 @@ export const loginController = async (req, res, next) => {
         return res.status(400).json({ message: 'Both fields are required' });
     }
     try {
-        const { token, userObj, expires } = await loginService({
+        const { token, userObj, expires } = await authService.loginService({
             email,
             password,
         });

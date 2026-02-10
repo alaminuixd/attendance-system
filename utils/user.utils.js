@@ -22,3 +22,41 @@ export const sanitizeUser = (user, items = []) => {
 
     return userObj;
 };
+
+export const sanitizeData = (data, items = []) => {
+    if (!data) return null;
+    if (!Array.isArray(items)) {
+        throw new Error('items must be an array of strings');
+    }
+
+    // 👇 if array, sanitize each element
+    if (Array.isArray(data)) {
+        return data.map((item) => sanitizeData(item, items));
+    }
+
+    const objData =
+        typeof data.toObject === 'function' ? data.toObject() : { ...data };
+
+    items.forEach((key) => delete objData[key]);
+    return objData;
+};
+
+/* 
+call 1: 
+    data is not null [{...}, {...}] go next line
+    items are Array so go next line
+    data is Array so return data.map((item) => recursive(item/data, items=[item1]))
+    objData = 
+
+*/
+
+/* export const sanitizeData = (obj, items = []) => {
+    if (!obj) return null;
+    if (!Array.isArray(items)) {
+        throw new Error('items must be an array of strings');
+    }
+    const objData = obj.toObject ? obj.toObject() : { ...obj };
+    items.forEach((item) => delete objData[item]);
+    return objData;
+};
+ */
