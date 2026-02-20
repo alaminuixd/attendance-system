@@ -55,6 +55,7 @@ export const putUserById = async (req, res, next) => {
     const { userId } = req.params;
     const { name, email, roles, accountStatus } = req.body;
     try {
+        console.log(req.user);
         const user = await userService.updateUser(userId, {
             name,
             email,

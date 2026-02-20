@@ -21,7 +21,13 @@ export const registerService = async ({
     const foundUser = await findUserByProperty('email', email); //User.findOne({ email });
     if (foundUser) throw createError('User already exists!', 409);
     password = await doHash(password);
-    return createNewUser({ name, email, password, roles, accountStatus });
+    return createNewUser({
+        name,
+        email,
+        password,
+        roles,
+        accountStatus,
+    });
 };
 
 /**
@@ -37,10 +43,10 @@ export const registerService = async ({
 export const loginService = async ({ email, password }) => {
     // const user = await User.findOne({ email });
     const user = await findUserByProperty('email', email);
-    console.log(`User is: ${user}`);
+    // console.log(`User is: ${user}`);
     if (!user) throw createError('Invalid credentials!', 404);
     const isValid = await doHashCompare(password, user.password);
-    console.log(isValid);
+    // console.log(isValid);
     if (!isValid) throw createError('Invalid credentials!', 400);
     // console.log(user._doc.password);
     // console.log(user._doc.email);
@@ -51,7 +57,7 @@ export const loginService = async ({ email, password }) => {
         roles: user.roles,
         accountStatus: user.accountStatus,
     };
-    const expires = 5;
+    const expires = 15;
     const token = jwt.sign(payload, ACCESS_TOKEN_SEC, {
         expiresIn: `${expires}m`,
     });

@@ -1,11 +1,10 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 
 const adminAttendanceSchema = new Schema({
-  timeLimig: Number,
-  status: String,
-  createdAt: Date,
+    timeLimit: Number,
+    status: String,
 });
 
-const AdminAttendance = model("AdminAttendance", adminAttendanceSchema);
+const AdminAttendance = model('AdminAttendance', adminAttendanceSchema);
 
 export default AdminAttendance;
