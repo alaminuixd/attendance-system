@@ -10,6 +10,11 @@ export const getAttendance = async (req, res, next) => {
         if (!adminAttendance) {
             throw createError('Attendance not found', 404);
         }
+        // check if running
+        const running = await AdminAttendance.findOne({ status: 'RUNNING' });
+        if (!running) {
+            throw createError('Attendance time over', 400);
+        }
         // Prevent duplicate registration
         let attendance = await StudentAttendance.findOne({
             adminAttendance: id,
